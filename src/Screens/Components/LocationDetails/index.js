@@ -11,6 +11,7 @@ import Language from '../../../Config/Language';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import openMap from 'react-native-open-maps'
 import {getDistance, getPreciseDistance} from 'geolib';
+import constants from '../../../Store/Service/apiConstants'
 
 // props.navigation.getParam("url")
 
@@ -20,8 +21,9 @@ const index = props => {
   const[message,setMessage]=useState("");
   const[show,setShow]=useState(false)
   const zipcode=props.route.params.zipcode
-  zipcode.replace(" ","%20")
-  zipcode.replace("+","%2b")
+  const scType=props.route.params.type
+  scType=='zip'?
+ ( zipcode.replace(" ","%20"), zipcode.replace("+","%2b")):null
     //   {latitude: 31.518788113410, longitude: 74.345011290938},
 
   const [clientLongitude,setClientLongitude]=useState(0)
@@ -69,7 +71,7 @@ const calculateDistance = (vari) => {
     // var cllat=parseFloat(clientLatitude)
     // var cllon=parseFloat(clientLongitude)
     if(clientLatitude==0 || clientLongitude==0){
-      store.distance='calculating...'
+      store.distance=0
     }
     else{
 
@@ -94,6 +96,10 @@ const calculateDistance = (vari) => {
   //   `Distance\n\n${dis} Meter\nOR\n${dis / 1000} KM`
   // );
 };
+const locFunc=()=>{
+  setclientLatitude(parseFloat(props.route.params.lat))
+  setClientLongitude(parseFloat(props.route.params.long))
+}
 const zipCodeFunc=async()=>{
 
   const url1=""
@@ -144,7 +150,7 @@ const reqFunc = async () => {
     // setLoadingPending(true);
     console.log("1");
     console.log("2");
-    const response = await fetch("http://192.168.10.11:3000/api/stores", {
+    const response = await fetch(constants.BASE_URL+"/stores", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -175,8 +181,8 @@ const reqFunc = async () => {
 };
 useEffect(() => {
   reqFunc();
+  scType=='zip'? zipCodeFunc() : locFunc()
   
-  zipCodeFunc();
   
 
 }, [clientLongitude]);

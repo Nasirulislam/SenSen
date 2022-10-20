@@ -317,6 +317,8 @@ PODS:
     - glog
   - react-native-blob-util (0.16.3):
     - React-Core
+  - react-native-geolocation (3.0.2):
+    - React-Core
   - react-native-netinfo (9.3.5):
     - React-Core
   - react-native-pdf (6.6.2):
@@ -479,6 +481,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -575,6 +578,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pdf:
@@ -667,6 +672,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 0553c9fe7218e1f127be070bd5a4d2fc19fb8190
   React-logger: cffcc09e8aba8a3014be8d18da7f922802e9f19e
   react-native-blob-util: 4ec16cc21bfc8de8f0ddfd2c81ada00f8c34b646
+  react-native-geolocation: 878f8df870bacc7572f0883d1d7b439502e9727d
   react-native-netinfo: 85b2a435c4d3705c08b0c42ff2d6ef6b9622ea0a
   react-native-pdf: 33c622cbdf776a649929e8b9d1ce2d313347c4fa
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a

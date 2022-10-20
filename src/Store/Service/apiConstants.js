@@ -1,6 +1,8 @@
 module.exports = {
   //BASE_URL: 'http://192.168.2.1:3000/api',
-  BASE_URL: 'http://sensen-terraform-elb-127760359.us-east-1.elb.amazonaws.com/API',
+  BASE_URL: 'http://ec2-44-201-160-22.compute-1.amazonaws.com/api',
+
+  // BASE_URL: 'http://sensen-terraform-elb-127760359.us-east-1.elb.amazonaws.com/API',
   LOGIN: '/users/login?include=user',
   SIGNUP: '/users',
   UPDATE_USER_IFO: '/users/updateUserInfoByUserId',
