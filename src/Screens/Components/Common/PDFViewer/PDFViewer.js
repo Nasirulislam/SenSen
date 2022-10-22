@@ -42,8 +42,8 @@ const PDFViewer = (props) => {
 				</SafeAreaView>
 				<Icon
 					onPress={props.close}
-					name="closecircle"
-					type="AntDesign"
+					name="close"
+					type="MaterialIcons"
 					size={wp(10)}
 					color={'black'}
 					style={{ position: 'absolute', marginTop: hp(90), alignSelf: 'center' }}

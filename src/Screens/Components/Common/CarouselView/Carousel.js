@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import { hp, wp } from '../../../../Config/Helper/ResponsiveScreen';
 import styles from './styles';
-import Icon from 'react-native-dynamic-vector-icons';
+// import Icon from 'react-native-dynamic-vector-icons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Language from '../../../../Config/Language';
 import Slider from '@react-native-community/slider';
 import ImageZoom from 'react-native-image-pan-zoom';
@@ -184,18 +186,28 @@ console.log([tempArray])
                      	 source={require('../../../../Assets/images/pin2.png')} /> 
 					 
 				</SafeAreaView>
-			
-				<Icon
+				<Icon onPress={()=>{
+						setSelectedImage(0);
+						props.close()
+					}} 
+					name="close" size={30} 
+					color="#009dff"
+					size={wp(10)}
+					color={'black'}
+					style={{ position: 'absolute', marginTop: hp(90), alignSelf: 'center' }}
+				
+					/>
+				{/* <Icon
 					onPress={()=>{
 						setSelectedImage(0);
 						props.close()
 					}}
-					name="closecircle"
-					type="AntDesign"
+					name="close"
+					type="MaterialIcons"
 					size={wp(10)}
 					color={'black'}
 					style={{ position: 'absolute', marginTop: hp(90), alignSelf: 'center' }}
-				/>
+				/> */}
 			</Modal>
 		</SafeAreaView>
 	);

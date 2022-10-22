@@ -28,36 +28,8 @@ const index = props => {
 
   const [clientLongitude,setClientLongitude]=useState(0)
   const [clientLatitude,setclientLatitude]=useState(0)
-function distance(lat1,
-  lat2, lon1, lon2)
-{
 
-// The math module contains a function
-// named toRadians which converts from
-// degrees to radians.
-lon1 =  lon1 * Math.PI / 180;
-lon2 = lon2 * Math.PI / 180;
-lat1 = lat1 * Math.PI / 180;
-lat2 = lat2 * Math.PI / 180;
-
-// Haversine formula
-let dlon = lon2 - lon1;
-let dlat = lat2 - lat1;
-let a = Math.pow(Math.sin(dlat / 2), 2)
-+ Math.cos(lat1) * Math.cos(lat2)
-* Math.pow(Math.sin(dlon / 2),2);
-
-let c = 2 * Math.asin(Math.sqrt(a));
-
-// Radius of earth in kilometers. Use 3956
-// for miles
-let r = 6371;
-
-// calculate the result
-return(c * r);
-}
 const calculateDistance = (vari) => {
-  console.log("inside calculate distance")
   console.log(vari)
   // var dis = getDistance(
   //   {latitude: , longitude: },
@@ -84,8 +56,15 @@ const calculateDistance = (vari) => {
         console.log(store.name)
         console.log(lat,lon)
         store.distance=dis
-        setShow(true)
+        if(dis.toFixed(2)!==0.00){
+          setShow(true)
+        }
+        else{
+          setShow(false)
+          setMessage('some')
+        }
       }
+
     console.log(dis)
     // seting ==false?setSetting(true):setSetting(false)
   })
@@ -129,16 +108,11 @@ const zipCodeFunc=async()=>{
         
         // setStoreLocs(json)
       } else {  
-        console.log("not ok1");
+        console.log("Request error");
         
       }
-      if (index == 0) {
-        console.log("not ok2");
-      } else {
-        console.log("not ok3");
-      }
     } else {
-      console.log("not ok4");
+      console.log("Connection error");
     }
   }catch(err){
     console.log(err)
@@ -214,7 +188,8 @@ const renderItem = ({ item }) => {
       {/* <Text style={styles.detailStyle}>{item.op}</Text> */}
       <Text style={styles.detailStyle}>Closes {item.closeTime}</Text>
       <Text style={styles.detailStyle}>{item.type}</Text>
-      <Text style={styles.distStyle}>{item.distance.toFixed(2)} miles from {zipcode}</Text>
+      <Text style={styles.distStyle}>{item.distance.toFixed(2)} miles from {scType=='zip'? zipcode:'your Location'}</Text>
+      {/* {item.distance.toFixed(2)==0.00?(setShow(false), setMessage('Something went very wrong')):null} */}
     </View>
     <View style={{justifyContent:'center', flex:0.2}}>
       <TouchableOpacity onPress={()=>openWeb(item.websiteUrl)}>

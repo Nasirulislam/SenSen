@@ -1,7 +1,8 @@
 import React,{useState,useEffect} from 'react';
-import {View, Text, Image, PermissionsAndroid, Keyboard,TextInput,Platform} from 'react-native';
+import {View, Text, Image, PermissionsAndroid, Keyboard,TextInput,Platform,Alert} from 'react-native';
 import styles from './styles';
 import Container from '../../../Components/container';
+import { PERMISSIONS, request } from "react-native-permissions";
 // import SearchBox from '../Common/SearchBox';
 // import WhiteShadowBox from '../Common/WhiteShadowBox';
 // import ProductInfoListComponent from '../Common/ProductInfoListComponent';
@@ -12,6 +13,7 @@ import Language from '../../../Config/Language';
 import Geolocation from '@react-native-community/geolocation';
 
 const index = props => {
+  const [next,setNext]=useState(false)
   /////////////
   ////////////
   const [
@@ -125,7 +127,22 @@ const index = props => {
 
   ////////////////////////////
   //////////////////////////
-  
+
+  const checkPermission = async () => {
+    const p = await Permissions.check('location');
+    console.log("---------------------------------------")
+    console.log('permission check', p);
+    console.log("---------------------------------------")
+
+    console.log("---------------------------------------")
+
+    console.log("---------------------------------------")
+
+    console.log("---------------------------------------")
+
+    if (p === 'authorized') return;
+    return this.requestPermission();
+  };
   const [zipcode,setZipCode]=useState("")
   const [message,setMessage]=useState("")
   let params = { ref: true }
@@ -139,12 +156,121 @@ const index = props => {
    
   }
   const handleFindNearest=()=>{
+    checkPermission()
+    if(currentLongitude==''){
+      Alert.alert(
+                      "Warning!",
+                      "You switch location on to use this feature!",
+                      [
+                        {
+                          text:"ok",
+                          style:"ok",
+                        },
+                      ],
+                      {
+                        cancelable:true,
+                      }
+                    )
+    }
+    else{
+
+    
     Keyboard.dismiss()
     params['type'] = 'loc'
     params['long'] = currentLongitude ? currentLongitude : null
     params['lat'] = currentLatitude ? currentLatitude : null
     props.navigation.navigate('LocDetails', params);
     console.log(currentLongitude,currentLongitude)
+    }
+  }
+  // const handleFindNearest=()=>{
+  //   checkPermission()
+    // try {
+    //   request(
+    //       Platform.select({
+    //         android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    //         ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+    //       })
+    //     ).then(res => {
+          
+    //         Geolocation.getCurrentPosition(
+    //           //Will give you the current location
+    //           (position) => {
+    //             setLocationStatus('You are Here');
+         
+    //             //getting the Longitude from the location json
+    //             const currentLongitude = 
+    //               JSON.stringify(position.coords.longitude);
+         
+    //             //getting the Latitude from the location json
+    //             const currentLatitude = 
+    //               JSON.stringify(position.coords.latitude);
+         
+    //             //Setting Longitude state
+    //             setCurrentLongitude(currentLongitude);
+                
+    //             //Setting Longitude state
+    //             setCurrentLatitude(currentLatitude);
+    //             setNext(true)
+    //           },
+    //           (error) => {
+    //             setNext(false)
+    //             setLocationStatus(error.message);
+    //             Alert.alert(
+    //               "Warning!",
+    //               "You switch location on to use this feature!",
+    //               [
+    //                 {
+    //                   text:"ok",
+    //                   style:"ok",
+    //                 },
+    //               ],
+    //               {
+    //                 cancelable:true,
+    //               }
+    //             )
+    //           },
+    //           {
+    //             enableHighAccuracy: false,
+    //             timeout: 30000,
+    //             maximumAge: 1000
+    //           },
+    //         );
+    //         gotoN();
+            
+          // } else {
+          //       Alert.alert(
+          //         "Warning!",
+          //         "You need to give location access to use this feature!",
+          //         [
+          //           {
+          //             text:"ok",
+          //             style:"ok",
+          //           },
+          //         ],
+          //         {
+          //           cancelable:true,
+          //         }
+          //       )
+          //     }
+        // });
+      // } catch (error) {
+      //   console.log("location set error:", error);
+      // }
+  // }
+  const gotoN=()=>{
+    if(next==true && currentLatitude!=""&&currentLongitude!=""){
+
+    
+    console.log(locationStatus)
+    params['type'] = 'loc'
+    params['long'] = currentLongitude ? currentLongitude : null
+    params['lat'] = currentLatitude ? currentLatitude : null
+    props.navigation.navigate('LocDetails', params);
+    }
+    else{
+             
+    }
   }
   const performSearch=()=>{
     Keyboard.dismiss()
