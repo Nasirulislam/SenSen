@@ -22,69 +22,75 @@ const { width: screenWidth } = Dimensions.get('window');
 const CarouselView = (props) => {
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [imagearray, setImageArray] = useState(props.contentArray);
+	console.log(props.contentArray)
+	const [imgArr, setImgArr] = useState([])
 	const carouselRef = useRef(null);
 
-	 useEffect(() => {
+
+	useEffect(() => {
 		filterImages(props.contentArray)
-	 }, [props.contentArray]);
+	}, [props.contentArray]);
 
 	const goForward = () => {
 		carouselRef.current.snapToNext();
 	};
 
-	const changeCarasole=(index)=>{
-		console.log('indexindex',index)
-		if(imagearray.length!=index)
-		{
+	const changeCarasole = (index) => {
+		console.log('indexindex', index)
+		if (imagearray.length != index) {
 			setSelectedImage(index)
 
 		}
 
 	}
 
-	const filterImages=async(images)=>{
+	const filterImages = async (images) => {
 
-		console.log('imagess====>>>>>>>',images)
-		console.log('selecion====>>>>>>>',selectedImage)
-		if(images.length==1)
-		{
+		console.log('imagess====>>>>>>>', images)
+		console.log('selecion====>>>>>>>', selectedImage)
+		if (images.length == 1) {
 			setImageArray(images)
 			return;
 		}
 		//let tempArray=  await images.filter(item => item['URI'].includes("cloudfront"))
-		let tempArray=  images;
-		await tempArray.map((img,index)=>{
-			if(img['Asset File Name'].includes("_"))
-			{
+		let tempArray = images;
+		await tempArray.map((img, index) => {
+			if (img['Asset File Name'].includes("_")) {
 				var myString = img['Asset File Name'].substr(img['Asset File Name'].indexOf("_") + 1).split('.')[0]
-				tempArray[index]['Asset File Name']=myString;
+				tempArray[index]['Asset File Name'] = myString;
 			}
-			
+
 		})
-		console.log('tempArray',tempArray)
+		console.log('tempArray', tempArray)
 		var byindex = await tempArray.slice(0);
-		await byindex.sort(function(a,b) {
+		await byindex.sort(function (a, b) {
 			return a['Asset File Name'] - b['Asset File Name'];
 		});
 		console.log('by date:');
-		byindex.map((pop,index)=>{
-			if(pop['Type Code'] == "P04")
-			{
-				byindex.slice(index,1)
+		byindex.map((pop, index) => {
+			if (pop['Type Code'] == "P04") {
+				byindex.slice(index, 1)
 			}
 		})
-		console.log(byindex);	
-		if(byindex.length>1)
-		{
-			let FINAL_FILTER =  await byindex.filter(item => item['Asset File Name'].length<3)
-			console.log('FINAL_FILTER',FINAL_FILTER)
+		console.log(byindex);
+		if (byindex.length > 1) {
+			let FINAL_FILTER = await byindex.filter(item => item['Asset File Name'].length < 3)
+			console.log('FINAL_FILTER', FINAL_FILTER)
 			setImageArray(FINAL_FILTER)
 		}
 	}
-	let tempArray=  props.contentArray.filter(item => item['URI'].includes("_"))
-console.log([props.contentArray])
-console.log([tempArray])
+	let tempArray = props.contentArray.filter(item => item['URI'].includes("_"))
+	console.log([props.contentArray])
+	console.log([tempArray])
+	useEffect(() => {
 
+		imagearray.forEach((img, index) => {
+			// imgArr=require(img.URI)
+			// console.log("printing image",img)
+			// var tempImg=require(img.URI).default
+			// imgArr.push(require('https://d19ewn6ke2t8ie.cloudfront.net/catalog72/90480/9214-0642_22.jpg'))
+		})
+	}), []
 	return (
 		<SafeAreaView style={styles.container}>
 			<Modal
@@ -93,25 +99,36 @@ console.log([tempArray])
 				transparent={props.transparent}
 				visible={props.visible}>
 				<SafeAreaView style={{ ...styles.mainContainer, ...props.mainContainerStyle }}>
-				
-				<Image
-              source={require('../../../../Assets/images/SENSEN_Logo.png')}
-              resizeMode="contain"
-              style={styles.logo}
-            />
-					{/* <Text style={styles.menuTxt}>{'PRODUCT'}</Text> */}
 
+					<Image
+						source={require('../../../../Assets/images/SENSEN_Logo.png')}
+						resizeMode="contain"
+						style={styles.logo}
+					/>
+					{/* <Text style={styles.menuTxt}>{'PRODUCT'}</Text> */}
+					{console.log('inside here')}
 					{props.contentArray.length > 0 ?
 
-					<ImageZoom cropWidth={wp(96)}
-                       cropHeight={wp(130)}
-                       imageWidth={wp(90)}
-                       imageHeight={wp(120)}>
-					<FastImage style={{width:wp(90), height:wp(120),top: hp(1), alignSelf: 'center'}}
-						source={{uri:imagearray[selectedImage].URI }}
-						
-						resizeMode={FastImage.resizeMode.contain}/>
-					</ImageZoom>
+						<ImageZoom cropWidth={wp(96)}
+							cropHeight={wp(130)}
+							imageWidth={wp(90)}
+							imageHeight={wp(120)}>
+								{
+									imagearray.map((img,index)=>(
+										// selectedImage==index &&
+										<FastImage style={{ width: wp(90), height: wp(120), top: hp(1), alignSelf: 'center', display: selectedImage === index ?'flex':'none' }}
+								source={{uri:img.URI }}
+								// source={imgArr[selectedImage]}
+
+								resizeMode={FastImage.resizeMode.contain} />
+									))
+								}
+							{/* <FastImage style={{ width: wp(90), height: wp(120), top: hp(1), alignSelf: 'center' }}
+								source={{uri:imagearray[selectedImage].URI }} */}
+								{/* // source={imgArr[selectedImage]}
+
+								resizeMode={FastImage.resizeMode.contain} /> */}
+						</ImageZoom>
 						// <Image
 						// 	source={{ uri: imagearray[selectedImage].URI }}
 						// 	resizeMode='contain'
@@ -147,9 +164,9 @@ console.log([tempArray])
 						thumbTintColor='#1b7139'
 					//	thumbStyle={{ height: 40, width: 40, backgroundColor: 'transparent' }}
 					//	thumbImage={require('../../../../Assets/images/sli.png')}
-           			//	thumbImage={require('../../../../Assets/images/thumb.png')}
-					   
-									
+					//	thumbImage={require('../../../../Assets/images/thumb.png')}
+
+
 					/>
 
 					{/* <Carousel
@@ -171,32 +188,32 @@ console.log([tempArray])
 						hasParallaxImages={true}
 					 //loop={true}
 					/> */}
-					
-						{/* <Image
+
+					{/* <Image
                     	 resizeMode="contain"
 						 style = {{width: wp(20), position:"absolute", alignSelf:'flex-end'}}
                      	 source={require('../../../../Assets/images/pinch.png')} />  */}
-						  <Image
-                    	 resizeMode="contain"
-						 style = {{width: wp(20), position:"absolute", alignSelf:'flex-start',marginTop: hp(60), marginLeft:15 }}
-                     	 source={require('../../../../Assets/images/360th.png')} /> 
-						  <Image
-                    	 resizeMode="contain"
-						 style = {{width: wp(20), position:"absolute", alignSelf:'flex-end',marginTop: hp(60)}}
-                     	 source={require('../../../../Assets/images/pin2.png')} /> 
-					 
+					<Image
+						resizeMode="contain"
+						style={{ width: wp(20), position: "absolute", alignSelf: 'flex-start', marginTop: hp(60), marginLeft: 15 }}
+						source={require('../../../../Assets/images/360th.png')} />
+					<Image
+						resizeMode="contain"
+						style={{ width: wp(20), position: "absolute", alignSelf: 'flex-end', marginTop: hp(60) }}
+						source={require('../../../../Assets/images/pin2.png')} />
+
 				</SafeAreaView>
-				<Icon onPress={()=>{
-						setSelectedImage(0);
-						props.close()
-					}} 
-					name="close" size={30} 
+				<Icon onPress={() => {
+					setSelectedImage(0);
+					props.close()
+				}}
+					name="close" size={30}
 					color="#009dff"
 					size={wp(10)}
 					color={'black'}
 					style={{ position: 'absolute', marginTop: hp(90), alignSelf: 'center' }}
-				
-					/>
+
+				/>
 				{/* <Icon
 					onPress={()=>{
 						setSelectedImage(0);

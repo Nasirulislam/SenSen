@@ -3,19 +3,12 @@ import {View, Text, Image, PermissionsAndroid, Keyboard,TextInput,Platform,Alert
 import styles from './styles';
 import Container from '../../../Components/container';
 import { PERMISSIONS, request } from "react-native-permissions";
-// import SearchBox from '../Common/SearchBox';
-// import WhiteShadowBox from '../Common/WhiteShadowBox';
-// import ProductInfoListComponent from '../Common/ProductInfoListComponent';
-// import {colors, SHW} from '../../../Config/Helper/sty/les';
-// import {hp, wp} from '../../../Config/Helper/ResponsiveScreen';
 import Button from '../../../Components/button';
 import Language from '../../../Config/Language';
 import Geolocation from '@react-native-community/geolocation';
 
 const index = props => {
-  const [next,setNext]=useState(false)
-  /////////////
-  ////////////
+  //useState hook to store coordinates and other variables
   const [
     currentLongitude,
     setCurrentLongitude
@@ -29,6 +22,7 @@ const index = props => {
     setLocationStatus
   ] = useState('');
  
+  // whenever component will mount application will ask for locaation permission if not given and get current coordinates
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
@@ -124,28 +118,12 @@ const index = props => {
     );
   };
 
-
-  ////////////////////////////
-  //////////////////////////
-
-  const checkPermission = async () => {
-    const p = await Permissions.check('location');
-    console.log("---------------------------------------")
-    console.log('permission check', p);
-    console.log("---------------------------------------")
-
-    console.log("---------------------------------------")
-
-    console.log("---------------------------------------")
-
-    console.log("---------------------------------------")
-
-    if (p === 'authorized') return;
-    return this.requestPermission();
-  };
+  // variable to store zipcode and error message
   const [zipcode,setZipCode]=useState("")
   const [message,setMessage]=useState("")
   let params = { ref: true }
+  
+  //function handler for search by zipcode
   const handleSubmit=()=>{
     if(zipcode==""){
       setMessage("*Zipcode Can't be empty")
@@ -155,12 +133,14 @@ const index = props => {
     }
    
   }
+
+  //function handler to search by nearest location
   const handleFindNearest=()=>{
-    checkPermission()
+    //generating alert if location permission is not enabled.
     if(currentLongitude==''){
       Alert.alert(
                       "Warning!",
-                      "You switch location on to use this feature!",
+                      "Please grant location permission to use this feature.",
                       [
                         {
                           text:"ok",
@@ -173,105 +153,18 @@ const index = props => {
                     )
     }
     else{
-
-    
-    Keyboard.dismiss()
-    params['type'] = 'loc'
-    params['long'] = currentLongitude ? currentLongitude : null
-    params['lat'] = currentLatitude ? currentLatitude : null
-    props.navigation.navigate('LocDetails', params);
-    console.log(currentLongitude,currentLongitude)
+      //ketboard dismissal on submit
+      Keyboard.dismiss()
+      params['type'] = 'loc'
+      params['long'] = currentLongitude ? currentLongitude : null
+      params['lat'] = currentLatitude ? currentLatitude : null
+      //location router
+      props.navigation.navigate('LocDetails', params);
+      console.log(currentLongitude,currentLongitude)
     }
   }
-  // const handleFindNearest=()=>{
-  //   checkPermission()
-    // try {
-    //   request(
-    //       Platform.select({
-    //         android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    //         ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-    //       })
-    //     ).then(res => {
-          
-    //         Geolocation.getCurrentPosition(
-    //           //Will give you the current location
-    //           (position) => {
-    //             setLocationStatus('You are Here');
-         
-    //             //getting the Longitude from the location json
-    //             const currentLongitude = 
-    //               JSON.stringify(position.coords.longitude);
-         
-    //             //getting the Latitude from the location json
-    //             const currentLatitude = 
-    //               JSON.stringify(position.coords.latitude);
-         
-    //             //Setting Longitude state
-    //             setCurrentLongitude(currentLongitude);
-                
-    //             //Setting Longitude state
-    //             setCurrentLatitude(currentLatitude);
-    //             setNext(true)
-    //           },
-    //           (error) => {
-    //             setNext(false)
-    //             setLocationStatus(error.message);
-    //             Alert.alert(
-    //               "Warning!",
-    //               "You switch location on to use this feature!",
-    //               [
-    //                 {
-    //                   text:"ok",
-    //                   style:"ok",
-    //                 },
-    //               ],
-    //               {
-    //                 cancelable:true,
-    //               }
-    //             )
-    //           },
-    //           {
-    //             enableHighAccuracy: false,
-    //             timeout: 30000,
-    //             maximumAge: 1000
-    //           },
-    //         );
-    //         gotoN();
-            
-          // } else {
-          //       Alert.alert(
-          //         "Warning!",
-          //         "You need to give location access to use this feature!",
-          //         [
-          //           {
-          //             text:"ok",
-          //             style:"ok",
-          //           },
-          //         ],
-          //         {
-          //           cancelable:true,
-          //         }
-          //       )
-          //     }
-        // });
-      // } catch (error) {
-      //   console.log("location set error:", error);
-      // }
-  // }
-  const gotoN=()=>{
-    if(next==true && currentLatitude!=""&&currentLongitude!=""){
-
-    
-    console.log(locationStatus)
-    params['type'] = 'loc'
-    params['long'] = currentLongitude ? currentLongitude : null
-    params['lat'] = currentLatitude ? currentLatitude : null
-    props.navigation.navigate('LocDetails', params);
-    }
-    else{
-             
-    }
-  }
+  
+  //zipcode router
   const performSearch=()=>{
     Keyboard.dismiss()
     console.log(zipcode)
@@ -304,9 +197,6 @@ const index = props => {
             <View style={styles.iptContainer}>
               <TextInput
                 style={styles.inputContainer } keyboardType="text" textAlign='center' placeholder='ZIP/POSTALCODE'  onChangeText={(text) => {setZipCode(text); setMessage("")}}/> 
-              {/* <TouchableOpacity style={styles.btn} activeOpacity={.7}>
-                <Text style={styles.btnTxt}>SUBMIT</Text>
-              </TouchableOpacity> */}
               <Text style={styles.error}>
                 {message}
               </Text>
